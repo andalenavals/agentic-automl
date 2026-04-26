@@ -1,0 +1,13 @@
+.DS_Store
+.pytest_cache/
+.streamlit/
+.venv/
+__pycache__/
+*.egg-info/
+*.joblib
+*.pyc
+artifacts/
+build/
+dist/
+projects/*
+!projects/.gitkeep
