@@ -28,11 +28,20 @@ class DataProfile:
     columns: int
     numeric_features: list[str]
     categorical_features: list[str]
+    categorical_cardinality: dict[str, int]
+    missing_by_feature: dict[str, float]
+    constant_features: list[str]
+    likely_identifier_features: list[str]
+    date_like_features: list[str]
+    date_parse_failure_by_feature: dict[str, float]
+    high_cardinality_categorical_features: dict[str, int]
     missing_fraction: float
     target_cardinality: int
     target_name: str
     target_skew: float | None = None
     class_imbalance: float | None = None
+    distinct_by_feature: dict[str, int] = field(default_factory=dict)
+    numeric_range_by_feature: dict[str, dict[str, float | None]] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -69,7 +78,6 @@ class CandidateResult:
 @dataclass(slots=True)
 class RunArtifacts:
     project_dir: str
-    bundle_dir: str
     selected_metric: str
     higher_is_better: bool
     winner: str
@@ -79,11 +87,16 @@ class RunArtifacts:
     metrics_summary: dict[str, float]
     predictions_preview: list[dict[str, Any]]
     workflow_decisions: dict[str, str]
+    workflow_step_feedback: dict[str, dict[str, Any]]
+    training_summary: dict[str, Any] = field(default_factory=dict)
+    validation_summary: dict[str, Any] = field(default_factory=dict)
+    optimization_summary: dict[str, Any] = field(default_factory=dict)
+    final_validation_summary: dict[str, Any] = field(default_factory=dict)
+    output_notebook_path: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
             "project_dir": self.project_dir,
-            "bundle_dir": self.bundle_dir,
             "selected_metric": self.selected_metric,
             "higher_is_better": self.higher_is_better,
             "winner": self.winner,
@@ -93,4 +106,10 @@ class RunArtifacts:
             "metrics_summary": self.metrics_summary,
             "predictions_preview": self.predictions_preview,
             "workflow_decisions": self.workflow_decisions,
+            "workflow_step_feedback": self.workflow_step_feedback,
+            "training_summary": self.training_summary,
+            "validation_summary": self.validation_summary,
+            "optimization_summary": self.optimization_summary,
+            "final_validation_summary": self.final_validation_summary,
+            "output_notebook_path": self.output_notebook_path,
         }

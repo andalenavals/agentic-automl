@@ -17,6 +17,6 @@ def resolve_repo_root(explicit_root: str | Path | None = None) -> Path:
 
     current = Path(__file__).resolve()
     for parent in [current.parent, *current.parents]:
-        if (parent / "workflow" / "automl_workflow.md").exists():
+        if (parent / "pyproject.toml").exists() and (parent / "src" / "agentic_automl").exists():
             return parent
     return Path.cwd().resolve()

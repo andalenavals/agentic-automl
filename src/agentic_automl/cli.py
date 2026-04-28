@@ -19,9 +19,9 @@ def build_parser() -> argparse.ArgumentParser:
     plan_parser = subparsers.add_parser("plan", help="Profile data and print workflow recommendations")
     add_project_arguments(plan_parser)
 
-    run_parser = subparsers.add_parser("run", help="Execute the AutoML workflow and export a bundle")
+    run_parser = subparsers.add_parser("run", help="Execute the AutoML workflow and export a single rerunnable workflow notebook")
     add_project_arguments(run_parser)
-    run_parser.add_argument("--output-dir", help="Optional explicit output directory for the generated project bundle.")
+    run_parser.add_argument("--output-dir", help="Optional explicit output directory or `.ipynb` path for the generated workflow notebook.")
 
     subparsers.add_parser("ui", help="Launch the Streamlit chat UI")
     return parser
@@ -77,7 +77,8 @@ def main() -> int:
         return 0
 
     artifacts = execute_workflow(brief, output_root=args.output_dir)
-    print(f"Bundle ready at: {artifacts.bundle_dir}")
+    if artifacts.output_notebook_path:
+        print(f"Notebook ready at: {artifacts.output_notebook_path}")
     print(f"Winning model: {artifacts.winner}")
     print(f"Selected metric: {artifacts.selected_metric}")
     return 0

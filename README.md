@@ -9,29 +9,46 @@ The intended user is a coding agent such as Codex, Claude Code, or OpenClaw. The
 - what kind of problem should be solved
 - what success means
 
-The package then follows a fixed workflow, recommends each step, stores reusable memory, runs the workflow, and exports a winning model bundle with explainable artifacts.
+The package then follows a fixed workflow, recommends each step, runs the workflow, and exports a single workflow notebook.
+
+Feature pruning and feature-subset decisions are handled inside preprocessing, so there is no separate feature-selection step in the workflow.
+
+Each workflow step now ships with:
+
+- `SKILLS.md` for the reasoning/operating guide
+- `KNOWLEDGE.md` for the currently supported executable actions and capability keys
+- `LIMITS.md` for unsupported Action-mode requests and seed backlog items that should be implemented later
+
+All Action-mode step agents follow the same philosophy:
+
+- natural follow-up conversation
+- awareness of previous context and policy selections
+- awareness of limits and knowledge
+- clear distinction between consultation and execution
+- suggestions based on available policies and current customizations
+- flexibility to revise policy multiple times in one conversation
 
 ## MVP Scope
 
 - tabular CSV and Parquet datasets
 - classification and regression
-- fixed `automl_workflow.md`
-- per-step memory under `memory/global/<step>/step_memory.md`
+- fixed canonical `automl_workflow.md` under `src/agentic_automl/assets/`
 - chat-style UI with workflow recommendations and visualizations
 - optional compact hyperparameter competition
-- final exported winning-model bundle
+- final exported workflow notebook
 
 ## Structure
 
 ```text
 agentic-automl/
+├── docs/
 ├── examples/
-├── memory/
-│   └── global/
 ├── projects/
 ├── src/agentic_automl/
+│   └── assets/automl_workflow.md
+│   └── assets/skills/
 ├── tests/
-└── workflow/automl_workflow.md
+└── README.md
 ```
 
 ## Quick Start
@@ -42,6 +59,24 @@ source .venv/bin/activate
 pip install -e .
 agentic-automl ui
 ```
+
+## Documentation
+
+This repo now ships with a small Sphinx documentation site under `docs/`.
+
+Build it locally with:
+
+```bash
+source .venv/bin/activate
+pip install -e ".[docs]"
+sphinx-build -b html docs docs/_build/html
+```
+
+The main pages are:
+
+- `docs/workflow.rst`
+- `docs/action_agents.rst`
+- `docs/output_notebook.rst`
 
 Plan a project from the CLI:
 
@@ -68,18 +103,21 @@ agentic-automl run \
 
 ## What Gets Exported
 
-Each completed project bundle includes:
+Each completed run exports one notebook file that includes:
 
-- the winning model artifact
-- workflow decisions
-- leaderboard metrics
-- a human-readable report
-- a prediction preview
-- per-step project memory
+- the workflow decisions
+- metric summaries
+- explanations of the selected choices
+- plotting cells for the selected run
+- an embedded standalone runtime copied into the notebook itself
+- code cells that can rerun the full workflow from a dataset path resolved relative to the notebook location, without importing `agentic_automl`
+- the final holdout prediction table regenerated in memory when the notebook is executed
+
+The notebook is intentionally workflow-specific. It contains only the code
+needed for the selected path and does not import `agentic_automl` when rerun.
 
 ## Why This Design
 
 - project-specific data work can vary widely
 - the AutoML workflow can stay standardized
 - the UI and CLI both use the same workflow engine
-- every delivered project can improve future recommendations through stored memory

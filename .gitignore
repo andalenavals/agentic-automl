@@ -9,5 +9,6 @@ __pycache__/
 artifacts/
 build/
 dist/
+docs/_build/
 projects/*
 !projects/.gitkeep

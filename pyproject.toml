@@ -9,7 +9,7 @@ description = "AI-first AutoML workflow package for Codex, Claude Code, OpenClaw
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [
-  { name = "Andres + Codex" }
+  { name = "andalenavals + Codex" }
 ]
 dependencies = [
   "joblib>=1.4",
@@ -19,6 +19,11 @@ dependencies = [
   "pyarrow>=16.0",
   "scikit-learn>=1.5",
   "streamlit>=1.44",
+]
+
+[project.optional-dependencies]
+docs = [
+  "sphinx>=8.0",
 ]
 
 [project.scripts]
@@ -32,4 +37,4 @@ include-package-data = true
 where = ["src"]
 
 [tool.setuptools.package-data]
-agentic_automl = ["assets/*.md"]
+agentic_automl = ["assets/*.md", "assets/skills/*/*.md"]
