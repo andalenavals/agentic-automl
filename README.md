@@ -64,6 +64,12 @@ agentic-automl ui
 
 This repo now ships with a small Sphinx documentation site under `docs/`.
 
+Published docs:
+
+- [https://andalenavals.github.io/agentic-automl/](https://andalenavals.github.io/agentic-automl/)
+
+The site is deployed by the GitHub Pages workflow in `.github/workflows/github-pages.yml` and uses the Read the Docs Sphinx theme.
+
 Build it locally with:
 
 ```bash
